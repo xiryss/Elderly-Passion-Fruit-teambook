@@ -16,7 +16,7 @@ vector<ll> factorize(ll n) {
 		if (n != 1) res.pbc(n);
 		return res;
 	}
-	ll x = rand() % (n - 1) + 1;
+	ll x = rnd() % (n - 1) + 1;
 	ll y = x;
 	ll tries = 10 * sqrt(sqrt(n));
 	const int C = 60;
