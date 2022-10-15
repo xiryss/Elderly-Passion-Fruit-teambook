@@ -3,7 +3,7 @@
 ## Todo List
 
 - [ ] Half-Plane Intersection
-- [ ] Rho-Pollard primality test
+- [+] Rho-Pollard primality test
 - [ ] Milled-Rabin factorization
 - [ ] FFT
 - [ ] NTT
@@ -15,4 +15,4 @@
 - [ ] Fast modolo multiplication?
 - [ ] Suffix array
 - [ ] Suffix automaton
-- [ ] Prefix/Z functions?
+- [+] Prefix/Z functions?
