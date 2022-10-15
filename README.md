@@ -2,17 +2,20 @@
 
 ## Todo List
 
-- [ ] Half-Plane Intersection
+- [x] Half-Plane Intersection
 - [x] Rho-Pollard factorization
 - [ ] Milled-Rabin primality test
-- [ ] FFT
-- [ ] NTT
+- [x] FFT
+- [x] NTT
 - [ ] Or,and,xor-convolutions, SOS
 - [ ] Berlekamp-Massey
 - [ ] Polynomial Interpolation
 - [ ] Geometry Template?
 - [ ] LCT/Splay
 - [ ] Fast modolo multiplication?
-- [ ] Suffix array
+- [x] Suffix array, lcp
 - [ ] Suffix automaton
 - [x] Prefix/Z functions?
+- [x] Ordered set
+- [x] Blossom shrinking
+- [x] templates
