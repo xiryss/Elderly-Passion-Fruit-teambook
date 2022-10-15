@@ -1,16 +1,16 @@
-vector<int> pf(string s)
-{
+vector<int> pf(string s) {
     int k = 0;
     vector<int> p(s.size());
     for (int i = 1; i < s.size(); ++i) {
-        while (k && s[i] != s[k]) k = p[k - 1];
+        while (k && s[i] != s[k])
+            k = p[k - 1];
         k += (s[i] == s[k]);
         p[i] = k;
     }
     return p;
 }
-vector<int> zf(string s)
-{
+
+vector<int> zf(string s) {
     int n = s.size();
     vector<int> z(n, 0);
     for (int i = 1, l = 0, r = 0; i < n; ++i) {
