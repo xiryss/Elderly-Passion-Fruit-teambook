@@ -1,9 +1,7 @@
 const ld EPS = 1e-9;
-
 ld sq(ld a) {
     return a * a;
 }
-
 struct Point {
     ld x, y;
     Point() {
@@ -25,9 +23,7 @@ struct Point {
         return sqrt(len2());
     }
 };
-
 #define Vec Point
-
 struct line {
     ld a, b, c;
     line() {
@@ -40,29 +36,23 @@ struct line {
         c /= d;
     }
 };
-
 Point cross(line l, line m) {
     ld d = l.b * m.a - l.a * m.b;
     ld dx = l.c * m.b - l.b * m.c;
     ld dy = l.a * m.c - l.c * m.a;
     return Point(dx / d, dy / d);
 }
-
 Vec getPoint(line l) {
     return Vec(-l.b, l.a);
 }
-
 ld eval(line l, Point a) {
     return l.a * a.x + l.b * a.y + l.c;
 }
-
 bool bad(line a, line b, line c) {
     Point x = cross(b, c);
     return eval(a, x) > 0;
 }
-
 // Не забываем про bounding box
-
 vector<Point> hpi(vector<line> lines) {
     sort(all(lines), [](line al, line bl) -> bool {
         Point a = getPoint(al);
