@@ -1,25 +1,12 @@
-#include <bits/stdc++.h>
-
-using namespace std;
-
-#define all(a) (a).begin(), (a).end()
-
 struct Edge{
     int u, v;
 };
-
 const int N = 510;
 int n, m;
 vector<int> g[N];
 vector<Edge> perfectMatching;
-
 int match[N], par[N], base[N];
-bool used[N];
-
-bool blossom[N];
-
-bool lcaUsed[N];
-
+bool used[N], blossom[N], lcaUsed[N];
 int lca(int u, int v) {
     fill(lcaUsed, lcaUsed + n, false);
     while (u != -1) {
@@ -36,7 +23,6 @@ int lca(int u, int v) {
     assert(false);
     return -1;
 }
-
 void markPath(int v, int myBase, int children) {
     while (base[v] != myBase) {
         blossom[v] = blossom[match[v]] = true;
@@ -45,7 +31,6 @@ void markPath(int v, int myBase, int children) {
         v = par[match[v]];
     }
 }
-
 int findPath(int root) {
     iota(base, base + n, 0);
     fill(par, par + n, -1);
@@ -83,7 +68,6 @@ int findPath(int root) {
     }
     return -1;
 }
-
 void blossomShrinking(){
     fill(match, match + n, -1);
     for (int v = 0; v < n; ++v) {
@@ -103,19 +87,7 @@ void blossomShrinking(){
         }
     }
 }
-
 signed main() {
-    ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
-    cout.precision(20), cout.setf(ios::fixed);
-    /*cin >> n >> m;
-    for (int i = 0; i < m; ++i) {
-        int u, v;
-        cin >> u >> v;
-        // --u;
-        // --v;
-        g[u].push_back(v);
-        g[v].push_back(u);
-    }*/
     cin >> n;
     int u, v;
     set<pair<int, int>> edges;
