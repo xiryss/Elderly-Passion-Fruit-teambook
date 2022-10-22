@@ -1,56 +1,15 @@
 // НЕ ЗАБЫТЬ ВЫЗВАТЬ initFFT и проверить MAXLOG
-
 namespace NTT {
-
 const int MOD = 998244353;
 const int MAXLOG = 20;
-
 const int N = (1 << MAXLOG);
 const int MAXN = (1 << MAXLOG) + 228;
-
 int rev[MAXN];
 int w[MAXN];
 int n, m;
 int a[MAXN];
 int b[MAXN];
 int fans[MAXN];
-
-int add(int a, int b) {
-    a += b;
-    if (a >= MOD) {
-        a -= MOD;
-    }
-    return a;
-}
-
-int sub(int a, int b) {
-    a -= b;
-    if (a < 0) {
-        a += MOD;
-    }
-    return a;
-}
-
-int mul(int a, int b) {
-    return (ll)a * b % MOD;
-}
-
-int binpow(int a, int n) {
-    int ans = 1;
-    while (n) {
-        if (n & 1) {
-            ans = mul(ans, a);
-        }
-        a = mul(a, a);
-        n >>= 1;
-    }
-    return ans;
-}
-
-int inv(int a) {
-    return binpow(a, MOD - 2);
-}
-
 void initNTT() {
     int g = 2;
     for (;; g++) {
@@ -71,7 +30,6 @@ void initNTT() {
         rev[i] = (rev[i >> 1] >> 1) ^ ((i & 1) << (MAXLOG - 1));
     }
 }
-
 void NTT(int n, int LOG, int* a) {
     for (int i = 0; i < n; ++i) {
         if (i < (rev[i] >> (MAXLOG - LOG))) {
@@ -89,7 +47,6 @@ void NTT(int n, int LOG, int* a) {
         }
     }
 }
-
 void mul() {
     int LOG = 0;
     while ((1 << LOG) < 2 * max(n, m))
@@ -113,7 +70,6 @@ void mul() {
     }
     reverse(fans + 1, fans + sz);
 }
-
 vector<int> mul(const vector<int>& lhs, const vector<int>& rhs) {
     n = lhs.size();
     m = rhs.size();
