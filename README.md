@@ -4,7 +4,7 @@
 
 - [x] Half-Plane Intersection
 - [x] Rho-Pollard factorization
-- [ ] Milled-Rabin primality test
+- [x] Milled-Rabin primality test
 - [x] FFT
 - [x] NTT
 - [ ] Or,and,xor-convolutions, SOS
