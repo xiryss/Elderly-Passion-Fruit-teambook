@@ -11,7 +11,7 @@
 - [ ] Berlekamp-Massey
 - [ ] Polynomial Interpolation
 - [ ] Geometry Template?
-- [ ] LCT/Splay
+- [x] LCT/Splay
 - [ ] Fast modolo multiplication?
 - [x] Suffix array, lcp
 - [ ] Suffix automaton
@@ -19,3 +19,4 @@
 - [x] Ordered set
 - [x] Blossom shrinking
 - [x] templates
+- [x] Push-Relabel
