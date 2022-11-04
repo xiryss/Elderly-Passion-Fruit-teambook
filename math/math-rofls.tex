@@ -1,0 +1,31 @@
+$ClassesCount = \dfrac{1}{|G|} \sum_{\pi \in G} I(\pi)$\\
+$ClassesCount = \dfrac{1}{|G|} \sum_{\pi \in G} k^{C(\pi)}$\\
+$\binom{n}{k} \equiv \prod_{i}\binom{n_i}{k_i}$, $n_i, k_i$ - цифры $n,k$ в p-ичной системе счисления
+\\
+$\int_{a}^{b}f(x)dx \approx \dfrac{b-a}{6}(f(a) + 4f(\dfrac{a+b}
+{2})+f(b))$\\
+\\
+$x_{n+1} = x_n - \dfrac{f(x_n)}{f'(x_n)}$, $O(loglog)$\\
+\\
+$G(n) = n \oplus (n >> 1)$\\
+\begin{lstlisting}
+int rev_g (int g) {
+	int n = 0;
+	for (; g; g >>= 1)
+		n ^= g;
+	return n;
+}
+\end{lstlisting}\\
+\\
+$g(n) = \sum_{d|n} f(d) \Rightarrow f(n) = \sum_{d|n} g(d) \mu(\frac{n}{d})$\\\\
+$\sum_{d|n} \mu(d) = [n = 1],   \mu(1) = 1, \mu(p) = -1, \mu(p^k) = 0$\\
+$\sin(a \pm b) = \sin a \cos b \pm \sin b \cos a$\\
+$\cos(a \pm b) = \cos a \cos b \mp \sin a \sin b$\\
+$\tg(a\pm b) = \dfrac{\tg a \pm \tg b}{1 \mp \tg a \tg b}$\\
+$\ctg(a \pm b) = \dfrac{\ctg a \ctg b \mp 1}{\ctg b \pm \ctg a}$\\
+$\sin \dfrac{a}{2} = \pm \sqrt{\dfrac{1-\cos a}{2}}$\\
+$\cos \dfrac{a}{2} = \pm \sqrt{\dfrac{1+\cos a}{2}}$\\
+$\tg \dfrac{a}{2} = \dfrac{\sin a}{1 - \cos a} = \dfrac{1 - cos a}{sin a}$\\
+$\sin a \sin b = \dfrac{\cos(a-b) - \cos(a+b)}{2}$\\
+$\sin a \cos b = \dfrac{\sin(a-b) + \sin(a+b)}{2}$\\
+$\cos a \cos b = \dfrac{\cos(a-b) + \cos(a+b)}{2}$\\
