@@ -4,18 +4,18 @@ using namespace std;
 typedef long long ll;
 
 struct MaxFlow {
-    static const ll INF = 1e18 + 228; // maybe int?
+    static const ll INF = 1e18 + 228;  // maybe int?
     struct edge {
         int to, rev;
-        ll cap; // maybe int?
+        ll cap;  // maybe int?
     };
 
     int n;
     vector<vector<edge>> g;
-    vector<ll> ex; // maybe int?
+    vector<ll> ex;  // maybe int?
     vector<int> q;
 
-    ll flow(int t) { // maybe int?
+    ll flow(int t) {  // maybe int?
         while (true) {
             vector<int> dist(n, n);
             dist[t] = 0;
@@ -57,7 +57,7 @@ struct MaxFlow {
         ex.resize(n);
         q.resize(n);
     }
-    ll run(int s, int t) { // maybe int?
+    ll run(int s, int t) {  // maybe int?
         ex[s] = INF;
         return flow(t);
     }
@@ -68,7 +68,6 @@ struct MaxFlow {
         g[b].push_back({a, sza, cr});
     }
 };
-
 
 int main() {
     int n;

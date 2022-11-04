@@ -1,4 +1,4 @@
-struct Edge{
+struct Edge {
     int u, v;
 };
 const int N = 510;
@@ -12,13 +12,15 @@ int lca(int u, int v) {
     while (u != -1) {
         u = base[u];
         lcaUsed[u] = true;
-        if (match[u] == -1) break;
+        if (match[u] == -1)
+            break;
         u = par[match[u]];
     }
     while (v != -1) {
         v = base[v];
-        if (lcaUsed[v]) return v;
-        v = par[match[v]]; 
+        if (lcaUsed[v])
+            return v;
+        v = par[match[v]];
     }
     assert(false);
     return -1;
@@ -42,17 +44,21 @@ int findPath(int root) {
         int v = q.front();
         q.pop();
         for (auto to : g[v]) {
-            if (match[v] == to) continue;
-            if (base[v] == base[to]) continue;
+            if (match[v] == to)
+                continue;
+            if (base[v] == base[to])
+                continue;
             if (to == root || (match[to] != -1 && par[match[to]] != -1)) {
                 fill(blossom, blossom + n, false);
                 int myBase = lca(to, v);
                 markPath(v, myBase, to);
                 markPath(to, myBase, v);
                 for (int u = 0; u < n; ++u) {
-                    if (!blossom[base[u]]) continue;
+                    if (!blossom[base[u]])
+                        continue;
                     base[u] = myBase;
-                    if (used[u]) continue;
+                    if (used[u])
+                        continue;
                     used[u] = true;
                     q.push(u);
                 }
@@ -68,10 +74,11 @@ int findPath(int root) {
     }
     return -1;
 }
-void blossomShrinking(){
+void blossomShrinking() {
     fill(match, match + n, -1);
     for (int v = 0; v < n; ++v) {
-        if (match[v] != -1) continue;
+        if (match[v] != -1)
+            continue;
         int nxt = findPath(v);
         while (nxt != -1) {
             int parV = par[nxt];
@@ -94,8 +101,10 @@ signed main() {
     while (cin >> u >> v) {
         --u;
         --v;
-        if (u > v) swap(u, v);
-        if (edges.count({u, v})) continue;
+        if (u > v)
+            swap(u, v);
+        if (edges.count({u, v}))
+            continue;
         edges.insert({u, v});
         g[u].push_back(v);
         g[v].push_back(u);
