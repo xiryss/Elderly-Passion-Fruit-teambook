@@ -70,22 +70,6 @@ void mul() {
     }
     reverse(fans + 1, fans + sz);
 }
-vector<int> mul(const vector<int>& lhs, const vector<int>& rhs) {
-    n = lhs.size();
-    m = rhs.size();
-    for (int i = 0; i < n; ++i) {
-        a[i] = lhs[i];
-    }
-    for (int i = 0; i < m; ++i) {
-        b[i] = rhs[i];
-    }
-    mul();
-    vector<int> ans(n + m - 1);
-    for (int i = 0; i < n + m - 1; ++i) {
-        ans[i] = fans[i];
-    }
-    return ans;
-}
 }  // namespace NTT
 
 // НЕ ЗАБЫТЬ ВЫЗВАТЬ initFFT и проверить MAXLOG

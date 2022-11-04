@@ -41,8 +41,10 @@ void mul() {
     while ((1 << LOG) < 2 * max(n, m))
         LOG++;
     int sz = 1 << LOG;
-    for (int i = n; i < sz; i++) a[i] = 0;
-    for (int i = m; i < sz; ++i) b[i] = 0;
+    for (int i = n; i < sz; i++)
+        a[i] = 0;
+    for (int i = m; i < sz; ++i)
+        b[i] = 0;
     FFT(sz, LOG, a);
     FFT(sz, LOG, b);
     for (int i = 0; i < sz; i++) {
@@ -53,22 +55,6 @@ void mul() {
         fans[i] = (int)(a[i].real() / sz + 0.5);
     }
     reverse(fans + 1, fans + sz);
-}
-vector<int> mul(const vector<int>& lhs, const vector<int>& rhs) {
-    n = lhs.size();
-    m = rhs.size();
-    for (int i = 0; i < n; ++i) {
-        a[i] = lhs[i];
-    }
-    for (int i = 0; i < m; ++i) {
-        b[i] = rhs[i];
-    }
-    mul();
-    vector<int> ans(n + m - 1);
-    for (int i = 0; i < n + m - 1; ++i) {
-        ans[i] = fans[i];
-    }
-    return ans;
 }
 }  // namespace FFT
 // НЕ ЗАБЫТЬ ВЫЗВАТЬ initFFT и проверить MAXLOG
