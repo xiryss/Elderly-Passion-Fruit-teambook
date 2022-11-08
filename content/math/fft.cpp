@@ -1,4 +1,10 @@
-// НЕ ЗАБЫТЬ ВЫЗВАТЬ initFFT и проверить MAXLOG
+/**
+ * Author: Igor Markelov
+ * Date: 2022-11-08
+ * Description: Calculating product of two polynomials
+ * Time: O(n\log(n))
+ */
+// DONT FORGET TO INITFFT() AND CHECK MAXLOG
 namespace FFT {
 const int MAXLOG = 20;
 const ld PI = acos(-1);
@@ -57,4 +63,4 @@ void mul() {
     reverse(fans + 1, fans + sz);
 }
 }  // namespace FFT
-// НЕ ЗАБЫТЬ ВЫЗВАТЬ initFFT и проверить MAXLOG
+// DONT FORGET TO INITFFT() AND CHECK MAXLOG

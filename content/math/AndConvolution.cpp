@@ -1,3 +1,9 @@
+/**
+ * Author: Iurii Pustovalov
+ * Date: 2022-11-08
+ * Description: Calculating and-convolution modulo smth
+ * Time: O(n\log(n))
+ */
 void conv(vector<int>& a, bool x) {
     int n = a.size();
     for (int j = 0; (1 << j) < n; ++j) {

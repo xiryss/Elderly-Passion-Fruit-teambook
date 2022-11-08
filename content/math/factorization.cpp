@@ -1,3 +1,9 @@
+/**
+ * Author: Iurii Pustovalov
+ * Date: 2022-11-08
+ * Description: Factorizing a number real quick
+ * Time: O(n^{\frac{1}{4}})
+ */
 ll gcd(ll a, ll b) {
     while (b)
         a %= b, swap(a, b);
@@ -9,7 +15,7 @@ ll f(ll a, ll n) {
 }
 
 vector<ll> factorize(ll n) {
-    if (n <= 1e6) {  // можно добавить проверку с рабином
+    if (n <= 1e6) {  // can add primality check for speed?
         vector<ll> res;
         for (ll i = 2; i * i <= n; ++i) {
             while (n % i == 0) {
