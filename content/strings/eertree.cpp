@@ -1,3 +1,9 @@
+/**
+ * Author: Iurii Pustovalov 
+ * Date: 2022-11-08
+ * Description: Creates Eertree of string str
+ * Time: O(n)
+ */
 struct eertree {
     int len[MAXN], suffLink[MAXN];
     int to[MAXN][26];
