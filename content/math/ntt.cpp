@@ -1,4 +1,10 @@
-// НЕ ЗАБЫТЬ ВЫЗВАТЬ initFFT и проверить MAXLOG
+/**
+ * Author: Igor Markelov
+ * Date: 2022-11-08
+ * Description: Calculating FFT modulo MOD
+ * Time: O(n\log(n))
+ */
+// DONT FORGET TO CALL initNTT() AND CHECK MAXLOG
 namespace NTT {
 const int MOD = 998244353;
 const int MAXLOG = 20;
@@ -72,4 +78,4 @@ void mul() {
 }
 }  // namespace NTT
 
-// НЕ ЗАБЫТЬ ВЫЗВАТЬ initFFT и проверить MAXLOG
+// DONT FORGET TO CALL initNTT() AND CHECK MAXLOG

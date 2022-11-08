@@ -1,3 +1,9 @@
+/**
+ * Author: Iurii Pustovalov 
+ * Date: 2022-11-08
+ * Description: Calculating xor-convolution of 2 vectors modulo smth
+ * Time: O(n\log(n))
+ */
 void fwht(vector<int>& a) {
     int n = a.size();
     for (int l = 1; l < n; l <<= 1) {

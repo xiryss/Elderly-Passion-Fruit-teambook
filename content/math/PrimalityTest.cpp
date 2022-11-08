@@ -1,4 +1,10 @@
-const int iters = 8;  // можно уменьшить
+/**
+ * Author: Iurii Pustovalov
+ * Date: 2022-11-08
+ * Description: Checking primality of p
+ * Time: O(\log(C))
+ */
+const int iters = 8;  // can change
 bool isprime(ll p) {
     if (p == 1 || p == 4)
         return 0;
