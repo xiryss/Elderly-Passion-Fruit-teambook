@@ -1,3 +1,7 @@
+#ifdef LOCAL
+  #define _GLIBCXX_DEBUG
+#endif
+
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -8,9 +12,8 @@ using ull = unsigned long long;
 #define pbc push_back
 #define mp make_pair
 #define all(a) (a).begin(), (a).end()
-#define vin(a)      \
-  for (auto& i : a) \
-  cin >> i
+#define vin(a) \
+  for (auto& i : a) cin >> i
 
 mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
 
@@ -28,8 +31,8 @@ inline void chkmax(T1& x, const T2& y) {
   }
 }
 
-const ld EPS = 1e-9;
-const ld PI = acos(-1);
+ld EPS = 1e-9;
+ld PI = acos(-1);
 
 int sign(ld x) {
   if (x > EPS) {
@@ -90,7 +93,7 @@ struct Point {
       return false;
     }
   }
-  bool operator==(const Point& other) const {
+  bool operator==(Point& other) const {
     return sign(x - other.x) == 0 && sign(y - other.y) == 0;
   }
   Point norm() const {
@@ -103,7 +106,7 @@ struct Point {
 
 #define Vec Point
 
-ld getAngle(const Vec& lhs, const Vec& rhs) {
+ld getAngle(Vec& lhs, Vec& rhs) {
   return atan2(lhs ^ rhs, lhs * rhs);
 }
 
@@ -121,30 +124,24 @@ bool cmpHalf(const Vec& lhs, const Vec& rhs) {
 }
 
 bool isCrossed(ld lx, ld rx, ld ly, ld ry) {
-  if (lx > rx)
-    swap(lx, rx);
-  if (ly > ry)
-    swap(ly, ry);
+  if (lx > rx) swap(lx, rx);
+  if (ly > ry) swap(ly, ry);
   return sign(min(rx, ry) - max(lx, ly)) >= 0;
 }
 
 // if two segments [a, b] and [c, d] has AT LEAST one common point -> true
-bool isCrossed(const Point& a, const Point& b, const Point& c, const Point& d) {
-  if (!isCrossed(a.x, b.x, c.x, d.x))
-    return false;
-  if (!isCrossed(a.y, b.y, c.y, d.y))
-    return false;
+bool isCrossed(Point& a, Point& b, Point& c, Point& d) {
+  if (!isCrossed(a.x, b.x, c.x, d.x)) return false;
+  if (!isCrossed(a.y, b.y, c.y, d.y)) return false;
   Vec v1, v2, v3;
   v1 = b - a;
   v2 = c - a;
   v3 = d - a;
-  if (sign(v1 ^ v2) * sign(v1 ^ v3) == 1)
-    return false;
+  if (sign(v1 ^ v2) * sign(v1 ^ v3) == 1) return false;
   v1 = d - c;
   v2 = a - c;
   v3 = b - c;
-  if (sign(v1 ^ v2) * sign(v1 ^ v3) == 1)
-    return false;
+  if (sign(v1 ^ v2) * sign(v1 ^ v3) == 1) return false;
   return true;
 }
 
@@ -153,7 +150,7 @@ struct Line {
   Line() = default;
   Line(ld _a, ld _b, ld _c) : a(_a), b(_b), c(_c) {
   }
-  Line(const Point& x, const Point& y) : a(y.y - x.y), b(x.x - y.x), c(x.y * y.x - x.x * y.y) {
+  Line(Point x, Point y) : a(y.y - x.y), b(x.x - y.x), c(x.y * y.x - x.x * y.y) {
     // for half planes
     ld d = Vec(a, b).len();
     assert(sign(d) > 0);
@@ -161,7 +158,7 @@ struct Line {
     b /= d;
     c /= d;
   }
-  ld eval(const Point& p) const {
+  ld eval(Point p) {
     return a * p.x + b * p.y + c;
   }
   bool operator==(const Line& other) const {
@@ -169,7 +166,7 @@ struct Line {
   }
 };
 
-ld dist(const Line& l, const Point& p) {
+ld dist(Line& l, Point& p) {
   return abs(l.eval(p) / Vec(l.a, l.b).len());
 }
 
@@ -191,7 +188,7 @@ x = (m.b * l.c - m.c * l.b) / (l.b * m.a - m.b * l.a)
 
 */
 
-bool cross(const Line& l, const Line& m, Point& I) {
+bool cross(Line& l, Line& m, Point& I) {
   ld d = l.b * m.a - m.b * l.a;
   if (sign(d) == 0) {
     return false;
@@ -202,7 +199,7 @@ bool cross(const Line& l, const Line& m, Point& I) {
   return true;
 }
 
-int touch(const Point& o, const ld r, const Point& p, Point& I1, Point& I2) {
+int tangents(Point& o, ld r, Point& p, Point& I1, Point& I2) {
   ld len = (o - p).len();
   int sgn = sign(len - r);
   if (sgn == -1) {
@@ -246,7 +243,7 @@ int cross(Point o1, ld r1, Point o2, ld r2, Point& I1, Point& I2) {
   return 2;
 }
 
-int cross(const Point& o, ld r, const Line& l, Point& I1, Point& I2) {
+int cross(Point& o, ld r, Line& l, Point& I1, Point& I2) {
   ld len = dist(l, o);
   int sgn = sign(len - r);
   if (sgn == 1) {
@@ -267,7 +264,7 @@ int cross(const Point& o, ld r, const Line& l, Point& I1, Point& I2) {
   return 2;
 }
 
-ld area(const vector<Point>& p) {
+ld area(vector<Point>& p) {
   ld ans = 0;
   int n = p.size();
   for (int i = 0; i < n; ++i) {
@@ -276,7 +273,7 @@ ld area(const vector<Point>& p) {
   return abs(ans) / 2;
 }
 
-ld perimeter(const vector<Point>& p) {
+ld perimeter(vector<Point>& p) {
   ld ans = 0;
   int n = p.size();
   for (int i = 0; i < n; ++i) {
@@ -285,7 +282,7 @@ ld perimeter(const vector<Point>& p) {
   return ans;
 }
 
-bool isOnSegment(const Point& a, const Point& b, const Point& x) {
+bool isOnSegment(Point& a, Point& b, Point& x) {
   if (a == b) {
     return a == x;
   }
@@ -295,7 +292,7 @@ bool isOnSegment(const Point& a, const Point& b, const Point& x) {
   // return sign((b - a).len() - (x - a).len() - (x - b).len()) == 0;
 }
 
-bool isIn(const vector<Point>& p, const Point& a) {
+bool isIn(vector<Point>& p, Point& a) {
   int n = p.size();
   // depents on limitations
   Point b = a + Point(1e9, 1);
@@ -327,14 +324,14 @@ bool isIn(const vector<Point>& p, const Point& a) {
   return abs(ans) > 1;*/
 }
 
-bool isCounterclockwise(const vector<Point>& p) {
+bool isCounterclockwise(vector<Point>& p) {
   int n = p.size();
   int pos = min_element(all(p)) - p.begin();
   return sign((p[pos + 1 < n ? pos + 1 : 0] - p[pos]) ^
               (p[pos - 1 >= 0 ? pos - 1 : n - 1] - p[pos])) == 1;
 }
 
-bool isConvex(const vector<Point>& p) {
+bool isConvex(vector<Point>& p) {
   int n = p.size();
   int sgn = 0;
   for (int i = 0; i < n; ++i) {
@@ -347,23 +344,21 @@ bool isConvex(const vector<Point>& p) {
   return true;
 }
 
-bool isInTriangle(const Point& a, const Point& b, const Point& c, const Point& x) {
+bool isInTriangle(Point& a, Point& b, Point& c, Point& x) {
   return sign((b - a) ^ (x - a)) >= 0 && sign((c - b) ^ (x - b)) >= 0 &&
          sign((a - c) ^ (x - c)) >= 0;
 }
 
 // points should be in the counterclockwise order
-bool isInConvex(const vector<Point>& p, const Point& a) {
+bool isInConvex(vector<Point>& p, Point& a) {
   int n = p.size();
   assert(n >= 3);
   // assert(isConvex(p));
   // assert(isCounterclockwise(p));
-  if (sign((p[1] - p[0]) ^ (a - p[0])) < 0)
-    return false;
-  if (sign((p[n - 1] - p[0]) ^ (a - p[0])) > 0)
-    return false;
+  if (sign((p[1] - p[0]) ^ (a - p[0])) < 0) return false;
+  if (sign((p[n - 1] - p[0]) ^ (a - p[0])) > 0) return false;
   int pos = lower_bound(p.begin() + 2, p.end(), a,
-                        [&](const Point& lhs, const Point& rhs) -> bool {
+                        [&](Point lhs, Point rhs) -> bool {
                           return sign((lhs - p[0]) ^ (rhs - p[0])) > 0;
                         }) -
             p.begin();
@@ -378,24 +373,21 @@ vector<Point> convexHull(vector<Point> p) {
   int n = p.size();
   int pos = min_element(all(p)) - p.begin();
   swap(p[0], p[pos]);
-  for (int i = 1; i < n; ++i)
-    p[i] = p[i] - p[0];
-  sort(p.begin() + 1, p.end(), [&](const Point& lhs, const Point& rhs) -> bool {
+  for (int i = 1; i < n; ++i) p[i] = p[i] - p[0];
+  sort(p.begin() + 1, p.end(), [&](Point& lhs, Point& rhs) -> bool {
     int sgn = sign(lhs ^ rhs);
     if (!sgn) {
       return lhs.len2() < rhs.len2();
     }
     return sgn == 1;
   });
-  for (int i = 1; i < n; ++i)
-    p[i] = p[i] + p[0];
+  for (int i = 1; i < n; ++i) p[i] = p[i] + p[0];
   int top = 0;
   for (int i = 0; i < n; ++i) {
     while (top >= 2) {
       Vec v1 = p[top - 1] - p[top - 2];
       Vec v2 = p[i] - p[top - 1];
-      if (sign(v1 ^ v2) == 1)
-        break;
+      if (sign(v1 ^ v2) == 1) break;
       --top;
     }
     p[top++] = p[i];
@@ -419,12 +411,9 @@ vector<Point> hpi(vector<Line> lines) {
   sort(all(lines), [](Line al, Line bl) -> bool {
     Point a = getPoint(al);
     Point b = getPoint(bl);
-    if (a.y >= 0 && b.y < 0)
-      return 1;
-    if (a.y < 0 && b.y >= 0)
-      return 0;
-    if (a.y == 0 && b.y == 0)
-      return a.x > 0 && b.x < 0;
+    if (a.y >= 0 && b.y < 0) return 1;
+    if (a.y < 0 && b.y >= 0) return 0;
+    if (a.y == 0 && b.y == 0) return a.x > 0 && b.x < 0;
     return (a ^ b) > 0;
   });
 
@@ -449,8 +438,7 @@ vector<Point> hpi(vector<Line> lines) {
           break;
         }
       }
-      if (!flag)
-        st.push_back({lines[i], i});
+      if (!flag) st.push_back({lines[i], i});
     }
   }
 
@@ -483,14 +471,30 @@ ld diameter(vector<Point> p) {
   ld ans = 0;
   int i = 0, j = 1;
   while (i < n) {
-    while (sign((p[i + 1 < n ? i + 1 : 0] - p[i]) ^ (p[j + 1 < n ? j + 1 : 0] - p[j])) >= 0) {
+    while (sign((p[(i + 1) % n] - p[i]) ^ (p[(j + 1) % n] - p[j])) >= 0) {
       chkmax(ans, (p[i] - p[j]).len());
-      j = j + 1 < n ? j + 1 : 0;
+      j = (j + 1) % n;
     }
     chkmax(ans, (p[i] - p[j]).len());
     ++i;
   }
   return ans;
+}
+
+pair<int, int> tangents_alex(vector<Point>& p, Point& a) {
+  int n = p.size();
+  int l = __lg(n);
+  auto findWithSign = [&](int val) {
+    int i = 0;
+    for (int k = l; k >= 0; --k) {
+      int i1 = (i - (1 << k) + n) % n;
+      int i2 = (i + (1 << k)) % n;
+      if (sign((p[i1] - a) ^ (p[i] - a)) == val) i = i1;
+      if (sign((p[i2] - a) ^ (p[i] - a)) == val) i = i2;
+    }
+    return i;
+  };
+  return {findWithSign(1), findWithSign(-1)};
 }
 
 signed main() {
@@ -623,7 +627,7 @@ signed main() {
     ld r;
     cin >> o.x >> o.y >> r >> p.x >> p.y;
     Point I1, I2;
-    int ans = touch(o, r, p, I1, I2);
+    int ans = tangents(o, r, p, I1, I2);
     if (!ans) {
       cout << ans << endl;
     } else if (ans == 1) {
@@ -807,11 +811,143 @@ signed main() {
     }
     p = convexHull(p);
     cout << p.size() << '\n';
-    for (const auto& [x, y] : p) {
+    for (auto& [x, y] : p) {
       cout << (ll)(round(x)) << " " << (ll)(round(y)) << '\n';
     }
     ld ans = area(p);
     cout << (ll)(ans) << (sign(ans - (ll)ans) == 1 ? ".5" : "") << endl;
+  }*/
+
+  // Stress tangents, fast point location
+  /* {
+    int N = 100000;
+    int C = 1e9;
+    int Q = 100;
+    auto get = [&] (int l, int r) -> int {
+      return (ull)rnd() % (r - l + 1) + l;
+    };
+    auto stupidTangents = [&] (vector<Point>& p, Point& a) {
+      auto cmp = [&](Point& lhs, Point& rhs) -> bool {
+        return sign((lhs - a) ^ (rhs - a)) > 0;
+      };
+      int posL = min_element(all(p), cmp) - p.begin();
+      int posR = max_element(all(p), cmp) - p.begin();
+      return mp(posL, posR);
+    };
+    for (int test_id = 0; test_id < 1'000'000; ++test_id) {
+      int n = get(1, N);
+      vector<Point> p(n);
+      for (int i = 0; i < n; ++i) {
+        p[i] = Point(get(-C, C), get(-C, C));
+      }
+      p = convexHull(p);
+      n = p.size();
+      for (int i = 0; i < Q; ++i) {
+        Point a(-C, C);
+        if (p.size() >= 3) {
+          if(isInConvex(p, a) != isIn(p, a)) {
+            cerr << "WA convex " << test_id << " " << i << endl;
+            cerr << "n = " << n << endl;
+            cerr << "p = " << endl;
+            for (auto [x, y] : p) {
+              cerr << "(" << x << ", " << y << ")" << endl;
+            }
+            cerr << "a = " << endl;
+            cerr << "(" << a.x << " " << a.y << ")" << endl;
+            cerr << "ans = " << isIn(p, a) << endl;
+            cerr << "out = " << isInConvex(p, a) << endl;
+            exit(1);
+          }
+        }
+        if (isIn(p, a)) continue;
+        auto ans = stupidTangents(p, a);
+        auto out = tangents_alex(p, a);
+        bool ok = true;
+        if (sign((p[ans.first] - a) ^ (p[out.first] - a)) != 0) {
+          ok = false;
+        } else if (sign((p[ans.second] - a) ^ (p[out.second] - a)) != 0) {
+          ok = false;
+        }
+        if (!ok) {
+          cerr << "WA tangents " << test_id << " " << i << endl;
+          cerr << "n = " << n << endl;
+          cerr << "p = " << endl;
+          for (auto [x, y] : p) {
+            cerr << "(" << x << ", " << y << ")" << endl;
+          }
+          cerr << "a = " << endl;
+          cerr << "(" << a.x << " " << a.y << ")" << endl;
+          cerr << "ans = " << ans.first << " " << ans.second << endl;
+          cerr << "out = " << out.first << " " << out.second << endl;
+          exit(1);
+        }
+      }
+      cerr << "OK " << test_id << endl;
+    }
+  } */
+
+  // Tinkoff Generation 2021-2022. B'. Геометрия C - Сыр (Offlin + check Online tangents)
+  /*{
+    int n;
+    cin >> n;
+    vector<Point> p(n);
+    for (auto& [x, y] : p) {
+      cin >> x >> y;
+    }
+    p = convexHull(p);
+    n = p.size();
+    int m;
+    cin >> m;
+    vector<Point> pIn(m);
+    for (auto& [x, y] : pIn) {
+      cin >> x >> y;
+    }
+    pIn = convexHull(pIn);
+    m = pIn.size();
+    Point base = p[0];
+    auto cmp = [&](Point& lhs, Point& rhs) -> bool {
+      return sign((lhs - base) ^ (rhs - base)) > 0;
+    };
+    int posL = min_element(all(pIn), cmp) - pIn.begin();
+    int nxtL = 1;
+    auto nxtV = [](int v, int n) -> int { return v + 1 < n ? v + 1 : 0; };
+    auto moveL = [&]() {
+      while (cmp(pIn[nxtV(posL, m)], pIn[posL])) posL = nxtV(posL, m);
+      assert(sign((pIn[posL] - base) ^ (pIn[tangents_alex(pIn, base).first] - base)) == 0);
+      while (cmp(p[nxtV(nxtL, n)], pIn[posL])) nxtL = nxtV(nxtL, n);
+    };
+    int posR = max_element(all(pIn), cmp) - pIn.begin();
+    int nxtR = 0;
+    auto moveR = [&]() {
+      while (cmp(pIn[posR], pIn[nxtV(posR, m)])) posR = nxtV(posR, m);
+      assert(sign((pIn[posR] - base) ^ (pIn[tangents_alex(pIn, base).second] - base)) == 0);
+      while (!cmp(pIn[posR], p[nxtR])) nxtR = nxtV(nxtR, n);
+    };
+    vector<ll> prefArea(n);
+    for (int i = 2; i < n; ++i) {
+      prefArea[i] = abs(round((p[i - 1] - p[0]) ^ (p[i] - p[0])));
+      prefArea[i] += prefArea[i - 1];
+    }
+    auto calcArea = [&](int l, int r) -> ll {
+      ll fans;
+      if (l <= r) {
+        if (r - l < 2) return 0;
+        fans = prefArea[r] - prefArea[l] - abs(round((p[l] - p[0]) ^ (p[r] - p[0])));
+      } else {
+        fans =
+            prefArea[n - 1] - prefArea[l] + prefArea[r] + abs(round((p[l] - p[0]) ^ (p[r] - p[0])));
+      }
+      return fans;
+    };
+    ll ans = 0;
+    for (int i = 0; i < n; ++i) {
+      base = p[i];
+      moveL();
+      moveR();
+      chkmax(ans, calcArea(i, nxtL));
+      chkmax(ans, calcArea(nxtR, i));
+    }
+    cout << ans << endl;
   }*/
 
   // Tinkoff Generation 2021-2022. B'. Геометрия 2 E - Разрезание торта
@@ -820,7 +956,7 @@ signed main() {
     freopen("cut.in", "r", stdin);
     freopen("cut.out", "w", stdout);
 #endif
-    const ld C = 1e3 + 228;
+    ld C = 1e3 + 228;
     int n;
     cin >> n;
     vector<Point> p(n);
@@ -905,6 +1041,5 @@ signed main() {
     ld ans = perimeter(convexHull(p)) + 2 * PI * l;
     cout << ans << endl;
   }*/
-
   return 0;
 }
