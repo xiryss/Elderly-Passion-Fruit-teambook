@@ -21,8 +21,7 @@ vector<int> buildLCP(string& s, vector<int>& a) {
       continue;
     }
     int j = a[ra[i] + 1];
-    while (s[i + cur] == s[j + cur])
-      cur++;
+    while (s[i + cur] == s[j + cur]) cur++;
     lcp[ra[i]] = cur;
   }
   // for suffixes!!!

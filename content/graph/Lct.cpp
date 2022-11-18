@@ -1,8 +1,8 @@
 /**
  * Author: Alexandr Nekrasov
  * Date: ?
- * Description: link cut tree?
- * Time: O(n\log(n))?
+ * Description: link-cut tree
+ * Time: O(n\log(n))
  */
 
 #include <bits/stdc++.h> /** keep-include */

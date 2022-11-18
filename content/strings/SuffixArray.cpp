@@ -38,7 +38,8 @@ vector<int> buildSuffixArray(string& s) {
     vector<int> nc(n);
     cc = 0;
     for (int i = 0; i < n; i++) {
-      if (i == 0 || c[a[i]] != c[a[i - 1]] || c[(a[i] + l) % n] != c[(a[i - 1] + l) % n]) {
+      if (i == 0 || c[a[i]] != c[a[i - 1]] ||
+          c[(a[i] + l) % n] != c[(a[i - 1] + l) % n]) {
         nc[a[i]] = cc++;
       } else {
         nc[a[i]] = nc[a[i - 1]];

@@ -1,12 +1,16 @@
-\documentclass[11pt, a4paper, notitlepage]{extreport}
+\documentclass[10pt, a4paper, notitlepage]{extreport}
 \usepackage{kactlpkg}
 \kactlcontentdir{content}
+\usepackage{amssymb}
+\usepackage{amsmath}
 
 \university{NRU HSE}{National Research University Higher School of Economics}{hse}
 \team{Elderly Passion Fruit}{Alexandr Nekrasov, Iurii Pustovalov, Igor Markelov}
 % \contest{ACM-ICPC World Finals 2017}{May 24, 2017}
 \contest{\ }{\today}
 % \enablecolors
+
+% \renewcommand*\contentsname{Algo}
 
 \begin{document}
 	\maketeampage
@@ -18,6 +22,7 @@
 	\thispagestyle{fancy}
 	% Table of contents, without subsections:
 	\setcounter{tocdepth}{0}
+
 	% \tableofcontents
 
 	% \kactlchapter{contest}
@@ -31,12 +36,18 @@
 	% \kactlchapter{various}
 
 	\kactlchapter{contest}
+	\columnbreak
 	\kactlchapter{cpp}
-	\kactlchapter{geometry}
+	\columnbreak
 	\kactlchapter{strings}
+	\columnbreak
 	\kactlchapter{graph}
+	\columnbreak
+	\kactlchapter{geometry}
+	\columnbreak
 	\kactlchapter{math}
-
+	\columnbreak
+	\kactlchapter{integrals}
 	\end{multicols*}
 
 	\includepdf[pages=-]{content/contest/ElderlyPassionFruitMonitor.pdf}

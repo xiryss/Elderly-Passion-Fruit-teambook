@@ -17,13 +17,11 @@ void fwht(vector<int>& a) {
 }  // https://judge.yosupo.jp/problem/bitwise_xor_convolution
 vector<int> xorconvo(vector<int> a, vector<int> b) {
   int n = 1;
-  while (n < max(a.size(), b.size()))
-    n *= 2;
+  while (n < max(a.size(), b.size())) n *= 2;
   a.resize(n), b.resize(n);
   fwht(a), fwht(b);
   int in = inv(n);
-  for (int i = 0; i < n; ++i)
-    a[i] = mul(a[i], mul(b[i], in));
+  for (int i = 0; i < n; ++i) a[i] = mul(a[i], mul(b[i], in));
   fwht(a);
   return a;
 }

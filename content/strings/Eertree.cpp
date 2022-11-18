@@ -9,11 +9,9 @@ struct eertree {
   int to[MAXN][26];
   int numV, v;
   void addLetter(int n, string& str) {
-    while (str[n - len[v] - 1] != str[n])
-      v = suffLink[v];
+    while (str[n - len[v] - 1] != str[n]) v = suffLink[v];
     int u = suffLink[v];
-    while (str[n - len[u] - 1] != str[n])
-      u = suffLink[u];
+    while (str[n - len[u] - 1] != str[n]) u = suffLink[u];
     int u_ = to[u][str[n] - 'a'];
     int v_ = to[v][str[n] - 'a'];
     if (v_ == -1) {
@@ -39,8 +37,7 @@ struct eertree {
   void init(int sz) {
     for (int i = 0; i < sz; ++i) {
       len[i] = suffLink[i] = 0;
-      for (int j = 0; j < 26; ++j)
-        to[i][j] = -1;
+      for (int j = 0; j < 26; ++j) to[i][j] = -1;
     }
   }
 };

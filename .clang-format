@@ -1,10 +1,10 @@
 BasedOnStyle: Google
 IndentWidth: 2
 AccessModifierOffset: -2
-ColumnLimit: 100
+ColumnLimit: 75
 AllowShortFunctionsOnASingleLine: None
-AllowShortIfStatementsOnASingleLine: false
-AllowShortLoopsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: true
 DerivePointerAlignment: true
 KeepEmptyLinesAtTheStartOfBlocks: true
-SortIncludes: false
+SortIncludes: true

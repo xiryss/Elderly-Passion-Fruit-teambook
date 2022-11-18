@@ -1,12 +1,12 @@
 #ifdef LOCAL
-  #define _GLIBCXX_DEBUG
+#define _GLIBCXX_DEBUG
 #endif
 
 #include <bits/stdc++.h>
 
 using namespace std;
 using ll = long long;
-using ld = long double;
+using ld = double;
 using ull = unsigned long long;
 
 #define pbc push_back
@@ -15,7 +15,8 @@ using ull = unsigned long long;
 #define vin(a) \
   for (auto& i : a) cin >> i
 
-mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
+// mt19937 rnd(chrono::steady_clock::now().time_since_epoch().count());
+mt19937 rnd(228);
 
 template <typename T1, typename T2>
 inline void chkmin(T1& x, const T2& y) {
@@ -102,6 +103,12 @@ struct Point {
     assert(sign(d) == 1);
     return Point(x / d, y / d);
   }
+  Point turn(ld sin, ld cos) const {
+    return Point(x * cos - y * sin, x * sin + y * cos);
+  }
+  Point turn(ld phi) const {
+    return turn(sin(phi), cos(phi));
+  }
 };
 
 #define Vec Point
@@ -148,9 +155,7 @@ bool isCrossed(Point& a, Point& b, Point& c, Point& d) {
 struct Line {
   ld a = 0, b = 0, c = 0;
   Line() = default;
-  Line(ld _a, ld _b, ld _c) : a(_a), b(_b), c(_c) {
-  }
-  Line(Point x, Point y) : a(y.y - x.y), b(x.x - y.x), c(x.y * y.x - x.x * y.y) {
+  void norm() {
     // for half planes
     ld d = Vec(a, b).len();
     assert(sign(d) > 0);
@@ -158,11 +163,23 @@ struct Line {
     b /= d;
     c /= d;
   }
-  ld eval(Point p) {
+  Line(ld _a, ld _b, ld _c) : a(_a), b(_b), c(_c) {
+    norm();
+  }
+  Line(Point x, Point y)
+      : a(y.y - x.y), b(x.x - y.x), c(x.y * y.x - x.x * y.y) {
+    norm();
+  }
+  ld eval(Point p) const {
     return a * p.x + b * p.y + c;
   }
+  bool isIn(Point p) const {
+    return sign(eval(p)) <= 0;
+  }
   bool operator==(const Line& other) const {
-    return sign(a * other.b - b * other.a) == 0 && sign(a * other.c - c * other.a) == 0;
+    return sign(a * other.b - b * other.a) == 0 &&
+           sign(a * other.c - c * other.a) == 0 &&
+           sign(b * other.c - c * other.b) == 0;
   }
 };
 
@@ -216,6 +233,29 @@ int tangents(Point& o, ld r, Point& p, Point& I1, Point& I2) {
     I2 = a - v;
     return 2;
   }
+}
+
+void tangents(Point c, ld r1, ld r2, vector<Line>& ans) {
+  ld r = r2 - r1;
+  ld z = sq(c.x) + sq(c.y);
+  ld d = z - sq(r);
+  if (sign(d) == -1) return;
+  d = sqrt(abs(d));
+  Line l;
+  l.a = (c.x * r + c.y * d) / z;
+  l.b = (c.y * r - c.x * d) / z;
+  l.c = r1;
+  ans.push_back(l);
+}
+
+vector<Line> tangents(Point o1, ld r1, Point o2, ld r2) {
+  vector<Line> ans;
+  for (int i = -1; i <= 1; i += 2)
+    for (int j = -1; j <= 1; j += 2)
+      tangents(o2 - o1, r1 * i, r2 * j, ans);
+  for (int i = 0; i < (int)ans.size(); ++i)
+    ans[i].c -= ans[i].a * o1.x + ans[i].b * o1.y;
+  return ans;
 }
 
 int cross(Point o1, ld r1, Point o2, ld r2, Point& I1, Point& I2) {
@@ -288,8 +328,9 @@ bool isOnSegment(Point& a, Point& b, Point& x) {
   }
   return sign((b - a) ^ (x - a)) == 0 && sign((b - a) * (x - a)) >= 0 &&
          sign((a - b) * (x - b)) >= 0;
-  // optional (slower, but works better if there are some precision problems)
-  // return sign((b - a).len() - (x - a).len() - (x - b).len()) == 0;
+  // optional (slower, but works better if there are some precision
+  // problems) return sign((b - a).len() - (x - a).len() - (x - b).len())
+  // == 0;
 }
 
 bool isIn(vector<Point>& p, Point& a) {
@@ -335,7 +376,8 @@ bool isConvex(vector<Point>& p) {
   int n = p.size();
   int sgn = 0;
   for (int i = 0; i < n; ++i) {
-    int cur_sgn = sign((p[i - 1 >= 0 ? i - 1 : n - 1] - p[i]) ^ (p[i + 1 < n ? i + 1 : 0] - p[i]));
+    int cur_sgn = sign((p[i - 1 >= 0 ? i - 1 : n - 1] - p[i]) ^
+                       (p[i + 1 < n ? i + 1 : 0] - p[i]));
     if (sgn && sgn != cur_sgn) {
       return false;
     }
@@ -429,10 +471,12 @@ vector<Point> hpi(vector<Line> lines) {
           } else {
             st.pop_back();
           }
-        } else if ((getPoint(st.back().first) ^ getPoint(lines[i])) < EPS / 2) {
+        } else if ((getPoint(st.back().first) ^ getPoint(lines[i])) <
+                   EPS / 2) {
           return {};
         } else if (st.size() >= 2 &&
-                   bad(st[st.size() - 2].first, st[st.size() - 1].first, lines[i])) {
+                   bad(st[st.size() - 2].first, st[st.size() - 1].first,
+                       lines[i])) {
           st.pop_back();
         } else {
           break;
@@ -457,6 +501,40 @@ vector<Point> hpi(vector<Line> lines) {
     break;
   }
   return ans;
+}
+
+bool isHpiEmpty(vector<Line> lines) {
+  // return hpi(lines).empty();
+  // overflow/precision problems?
+  shuffle(all(lines), rnd);
+  const ld C = 1e9;
+  Point ans(C, C);
+  vector<Point> box = {{-C, -C}, {C, -C}, {C, C}, {-C, C}};
+  for (int i = 0; i < 4; ++i) lines.push_back({box[i], box[(i + 1) % 4]});
+  int n = lines.size();
+  for (int i = n - 4; i >= 0; --i) {
+    if (lines[i].isIn(ans)) continue;
+    Point up(0, C + 1), down(0, -C - 1), pi = getPoint(lines[i]);
+    for (int j = i + 1; j < n; ++j) {
+      if (lines[i] == lines[j]) continue;
+      Point p, pj = getPoint(lines[j]);
+      if (!cross(lines[i], lines[j], p)) {
+        if (sign(pi * pj) != -1) continue;
+        if (sign(lines[i].c + lines[j].c) * (!sign(pi.y) ? sign(pi.x) : -1) == -1)
+          return true;
+      } else {
+        if ((!sign(pi.y) ? sign(pi.x) : sign(pi.y)) * (sign(pi ^ pj)) == 1)
+          chkmin(up, p);
+        else
+          chkmax(down, p);
+      }
+    }
+    if ((ans = up) < down) return true;
+  }
+  // for (int i = 0; i < n; ++i) {
+  //   assert(lines[i].eval(ans) < EPS);
+  // }
+  return false;
 }
 
 ld diameter(vector<Point> p) {
@@ -549,7 +627,8 @@ signed main() {
     }
   }*/
 
-  // Tinkoff Generation 2021-2022. C. Геометрия 1 E - Расстояние от точки до прямой
+  // Tinkoff Generation 2021-2022. C. Геометрия 1 E - Расстояние от точки
+  // до прямой
   /*{
     Point p;
     cin >> p.x >> p.y;
@@ -575,7 +654,8 @@ signed main() {
     }
   }*/
 
-  // Tinkoff Generation 2021-2022. C. Геометрия 1 G - Пусти козла в огород~- 1
+  // Tinkoff Generation 2021-2022. C. Геометрия 1 G - Пусти козла в
+  // огород~- 1
   /*{
     Point a, b, c;
     cin >> a.x >> a.y >> b.x >> b.y >> c.x >> c.y;
@@ -589,7 +669,8 @@ signed main() {
       }
       return atan2(lhs ^ rhs, lhs * rhs) / (2 * PI) * 360;
     };
-    cout << max({calc(b - a, c - a), calc(c - b, a - b), calc(a - c, b - c)}) << endl;
+    cout << max({calc(b - a, c - a), calc(c - b, a - b), calc(a - c, b -
+  c)}) << endl;
   }*/
 
   // Tinkoff Generation 2021-2022. C. Геометрия 1 H - Биссектриса
@@ -602,7 +683,8 @@ signed main() {
     cout << l.a << " " << l.b << " " << l.c << endl;
   }*/
 
-  // Tinkoff Generation 2021-2022. C. Геометрия 1 I - Пусти козла в огород - 4
+  // Tinkoff Generation 2021-2022. C. Геометрия 1 I - Пусти козла в огород
+  // - 4
   /*{
     Point a, b, c;
     cin >> a.x >> a.y >> b.x >> b.y >> c.x >> c.y;
@@ -621,7 +703,8 @@ signed main() {
     }
   }*/
 
-  // Tinkoff Generation 2021-2022. C. Геометрия 2 A - Касательные к окружности
+  // Tinkoff Generation 2021-2022. C. Геометрия 2 A - Касательные к
+  // окружности
   /*{
     Point o, p;
     ld r;
@@ -633,7 +716,8 @@ signed main() {
     } else if (ans == 1) {
       cout << ans << "\n" << I1.x << " " << I1.y << endl;
     } else if (ans == 2) {
-      cout << ans << "\n" << I1.x << " " << I1.y << "\n" << I2.x << " " << I2.y << endl;
+      cout << ans << "\n" << I1.x << " " << I1.y << "\n" << I2.x << " " <<
+  I2.y << endl;
     }
   }*/
 
@@ -675,11 +759,13 @@ signed main() {
     } else if (ans == 1) {
       cout << ans << "\n" << I1.x << " " << I1.y << endl;
     } else if (ans == 2) {
-      cout << ans << "\n" << I1.x << " " << I1.y << "\n" << I2.x << " " << I2.y << endl;
+      cout << ans << "\n" << I1.x << " " << I1.y << "\n" << I2.x << " " <<
+  I2.y << endl;
     }
   }*/
 
-  // Tinkoff Generation 2021-2022. C. Геометрия 2 D - Площадь многоугольника
+  // Tinkoff Generation 2021-2022. C. Геометрия 2 D - Площадь
+  // многоугольника
   /*{
     int n;
     cin >> n;
@@ -691,7 +777,8 @@ signed main() {
     cout << (ll)(ans) << (sign(ans - (ll)ans) == 1 ? ".5" : "") << endl;
   }*/
 
-  // Tinkoff Generation 2021-2022. C. Геометрия 2 E - Точка в многоугольнике
+  // Tinkoff Generation 2021-2022. C. Геометрия 2 E - Точка в
+  // многоугольнике
   /*{
 #ifndef LOCAL
     freopen("point.in", "r", stdin);
@@ -712,7 +799,8 @@ signed main() {
     }
   }*/
 
-  // Tinkoff Generation 2021-2022. C. Геометрия 2 F - Выпукл ли многоугольник
+  // Tinkoff Generation 2021-2022. C. Геометрия 2 F - Выпукл ли
+  // многоугольник
   /*{
     int n;
     cin >> n;
@@ -769,20 +857,11 @@ signed main() {
     }
     vector<int> order(n);
     iota(all(order), 0);
-    sort(all(order), [&](int lhs, int rhs) -> bool { return areas[lhs] < areas[rhs]; });
-    vector<bool> used(n);
-    int q;
-    cin >> q;
-    for (int i = 0; i < q; ++i) {
-      Point a;
-      cin >> a.x >> a.y;
-      int L = -1, R = n;
-      while (L < R - 1) {
-        int M = (L + R) / 2;
-        if (isInConvex(p[order[M]], a)) {
-          R = M;
-        } else {
-          L = M;
+    sort(all(order), [&](int lhs, int rhs) -> bool { return areas[lhs] <
+  areas[rhs]; }); vector<bool> used(n); int q; cin >> q; for (int i = 0; i
+  < q; ++i) { Point a; cin >> a.x >> a.y; int L = -1, R = n; while (L < R -
+  1) { int M = (L + R) / 2; if (isInConvex(p[order[M]], a)) { R = M; } else
+  { L = M;
         }
       }
       if (R < n)
@@ -886,7 +965,8 @@ signed main() {
     }
   } */
 
-  // Tinkoff Generation 2021-2022. B'. Геометрия C - Сыр (Offlin + check Online tangents)
+  // Tinkoff Generation 2021-2022. B'. Геометрия C - Сыр (Offlin + check
+  // Online tangents)
   /*{
     int n;
     cin >> n;
@@ -913,15 +993,17 @@ signed main() {
     auto nxtV = [](int v, int n) -> int { return v + 1 < n ? v + 1 : 0; };
     auto moveL = [&]() {
       while (cmp(pIn[nxtV(posL, m)], pIn[posL])) posL = nxtV(posL, m);
-      assert(sign((pIn[posL] - base) ^ (pIn[tangents_alex(pIn, base).first] - base)) == 0);
-      while (cmp(p[nxtV(nxtL, n)], pIn[posL])) nxtL = nxtV(nxtL, n);
+      assert(sign((pIn[posL] - base) ^ (pIn[tangents_alex(pIn, base).first]
+  - base)) == 0); while (cmp(p[nxtV(nxtL, n)], pIn[posL])) nxtL =
+  nxtV(nxtL, n);
     };
     int posR = max_element(all(pIn), cmp) - pIn.begin();
     int nxtR = 0;
     auto moveR = [&]() {
       while (cmp(pIn[posR], pIn[nxtV(posR, m)])) posR = nxtV(posR, m);
-      assert(sign((pIn[posR] - base) ^ (pIn[tangents_alex(pIn, base).second] - base)) == 0);
-      while (!cmp(pIn[posR], p[nxtR])) nxtR = nxtV(nxtR, n);
+      assert(sign((pIn[posR] - base) ^ (pIn[tangents_alex(pIn,
+  base).second] - base)) == 0); while (!cmp(pIn[posR], p[nxtR])) nxtR =
+  nxtV(nxtR, n);
     };
     vector<ll> prefArea(n);
     for (int i = 2; i < n; ++i) {
@@ -932,10 +1014,9 @@ signed main() {
       ll fans;
       if (l <= r) {
         if (r - l < 2) return 0;
-        fans = prefArea[r] - prefArea[l] - abs(round((p[l] - p[0]) ^ (p[r] - p[0])));
-      } else {
-        fans =
-            prefArea[n - 1] - prefArea[l] + prefArea[r] + abs(round((p[l] - p[0]) ^ (p[r] - p[0])));
+        fans = prefArea[r] - prefArea[l] - abs(round((p[l] - p[0]) ^ (p[r]
+  - p[0]))); } else { fans = prefArea[n - 1] - prefArea[l] + prefArea[r] +
+  abs(round((p[l] - p[0]) ^ (p[r] - p[0])));
       }
       return fans;
     };
@@ -1015,7 +1096,8 @@ signed main() {
     cout << R << endl;
   }*/
 
-  // Tinkoff Generation 2021-2022. B'. Геометрия 2 H - Две самые далёкие точки
+  // Tinkoff Generation 2021-2022. B'. Геометрия 2 H - Две самые далёкие
+  // точки
   /*{
     int n;
     cin >> n;
@@ -1041,5 +1123,104 @@ signed main() {
     ld ans = perimeter(convexHull(p)) + 2 * PI * l;
     cout << ans << endl;
   }*/
+
+  // Stress isHpiEmpty, hpi
+  {
+    int N = 10;
+    int C = 10;
+    auto get = [&](int l, int r) -> int {
+      return (ull)rnd() % (r - l + 1) + l;
+    };
+    auto getPoint = [&]() -> Point {
+      return Point(get(-C, C), get(-C, C));
+    };
+    for (int test_id = 0;; ++test_id) {
+      int n = get(1, N);
+      vector<Line> lines(n);
+      for (int i = 0; i < n; ++i) {
+        Point a = getPoint();
+        Point b = getPoint();
+        while (a == b) {
+          b = getPoint();
+        }
+        lines[i] = {a, b};
+      }
+      // cerr << "n = " << n << endl;
+      // cerr << "lines = " << endl;
+      // for (auto [a, b, c] : lines) {
+      //   cerr << "x * " << a << " + y * " << b << " + " << c << " = 0" <<
+      //   endl;
+      // }
+      const ld C = 1e9;
+      vector<Point> box = {{-C, -C}, {C, -C}, {C, C}, {-C, C}};
+      for (int i = 0; i < 4; ++i) {
+        lines.push_back({box[i], box[(i + 1) % 4]});
+      }
+      bool ans = hpi(lines).empty();
+      lines.resize(n);
+      bool out = isHpiEmpty(lines);
+      if (ans == 0 && out == 1) {
+        cerr << "WA isHpiEmpty " << test_id << endl;
+        cerr << "n = " << n << endl;
+        cerr << "lines = " << endl;
+        for (auto [a, b, c] : lines) {
+          cerr << "x * " << a << " + y * " << b << " + " << c << " = 0"
+               << endl;
+        }
+        cerr << "ans = " << ans << endl;
+        cerr << "out = " << out << endl;
+        exit(1);
+      }
+      cerr << "OK " << test_id << " ans = " << ans << endl;
+    }
+  }
+
+  // 2021-2022 ICPC NERC (NEERC), North-Western Russia Regional Contest
+  // (Northern Subregionals) G https://codeforces.com/gym/104011/problem/G
+  /* {
+    int n;
+    cin >> n;
+    vector<Point> p(n);
+    for (auto& [x, y] : p) {
+      cin >> x >> y;
+    }
+    int pos = min_element(all(p)) - p.begin();
+    rotate(p.begin(), p.begin() + pos, p.end());
+    vector<Point> v;
+    for (int i = 0; i < n; ++i) {
+      v.push_back(p[i + 1 < n ? i + 1 : 0] - p[i]);
+    }
+    vector<int> fpos(n);
+    for (int i = 0; i < n; ++i) {
+      int pos = lower_bound(all(v), Point() - v[i], cmpHalf) - v.begin();
+      pos = pos % n;
+      fpos[i] = pos;
+    }
+    auto check = [&](ld x) -> bool {
+      vector<Line> lines;
+      lines.reserve(2 * n);
+      auto addLine = [&](int i, int j) {
+        Vec v1 = (p[j] - p[i]) * (x / (x + 1));
+        Vec v2 = (p[j + 1 < n ? j + 1 : 0] - p[i]) * (x / (x + 1));
+        lines.push_back({p[i] + v1, p[i] + v2});
+      };
+      for (int i = 0; i < n; ++i) {
+        int pos = fpos[i];
+        addLine(i, pos);
+        addLine(pos, i);
+      }
+      return !isHpiEmpty(lines);
+    };
+    ld L = 1, R = 2;
+    for (int it = 0; it < 19; ++it) {
+      ld M = sqrt(L * R);
+      if (check(M)) {
+        R = M;
+      } else {
+        L = M;
+      }
+    }
+    cout << sqrt(L * R) << endl;
+  } */
   return 0;
 }

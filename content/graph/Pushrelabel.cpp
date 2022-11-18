@@ -1,8 +1,8 @@
 /**
  * Author: Alexandr Nekrasov
  * Date: ?
- * Description: maxflow?
- * Time: ?
+ * Description: Maxflow
+ * Time: O(n^2m)
  */
 
 #include <bits/stdc++.h> /** keep-include */

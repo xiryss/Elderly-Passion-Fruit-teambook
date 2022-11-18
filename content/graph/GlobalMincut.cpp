@@ -1,8 +1,8 @@
 /**
- * Author: Alexandr Nekrasov
+ * Author: Iurii Pustovalov
  * Date: ?
- * Description: ?
- * Time: ?
+ * Description: Global min cut
+ * Time: O(n^3)
  */
 
 const int MAXN = 500;

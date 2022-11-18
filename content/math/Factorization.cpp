@@ -5,8 +5,7 @@
  * Time: O(n^{\frac{1}{4}})
  */
 ll gcd(ll a, ll b) {
-  while (b)
-    a %= b, swap(a, b);
+  while (b) a %= b, swap(a, b);
   return a;
 }
 
@@ -23,8 +22,7 @@ vector<ll> factorize(ll n) {
         n /= i;
       }
     }
-    if (n != 1)
-      res.pbc(n);
+    if (n != 1) res.pbc(n);
     return res;
   }
   ll x = rnd() % (n - 1) + 1;
@@ -40,8 +38,7 @@ vector<ll> factorize(ll n) {
       y = f(f(y, n), n);
       m = (__int128_t)m * abs(x - y) % n;
     }
-    if (gcd(n, m) == 1)
-      continue;
+    if (gcd(n, m) == 1) continue;
     x = xs, y = ys;
     for (int k = 0; k < C; ++k) {
       x = f(x, n);
@@ -49,8 +46,7 @@ vector<ll> factorize(ll n) {
       ll res = gcd(n, abs(x - y));
       if (res != 1 && res != n) {
         vector<ll> v1 = factorize(res), v2 = factorize(n / res);
-        for (auto j : v2)
-          v1.pbc(j);
+        for (auto j : v2) v1.pbc(j);
         return v1;
       }
     }

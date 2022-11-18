@@ -5,17 +5,11 @@
  * Time: O(n\log(n))
  */
 // DONT FORGET TO INITFFT() AND CHECK MAXLOG
-namespace FFT {
-const int MAXLOG = 20;
 const ld PI = acos(-1);
 using cd = complex<long double>;
-const int N = (1 << MAXLOG);
-const int MAXN = (1 << MAXLOG) + 228;
-int rev[MAXN];
-cd w[MAXN];
-int n, m;
-cd a[MAXN], b[MAXN];
-int fans[MAXN];
+const int MAXLOG = 20, N = (1 << MAXLOG), MAXN = (1 << MAXLOG) + 228;
+int rev[MAXN], n, m, fans[MAXN];
+cd w[MAXN], a[MAXN], b[MAXN];
 void initFFT() {
   for (int i = 0; i < N; i++) {
     w[i] = cd(cos(2 * PI * i / N), sin(2 * PI * i / N));
@@ -43,24 +37,14 @@ void FFT(int n, int LOG, cd* a) {
   }
 }
 void mul() {
-  int LOG = 0;
-  while ((1 << LOG) < 2 * max(n, m))
-    LOG++;
+  int LOG = __lg(2 * max(n, m) - 1) + 1;
   int sz = 1 << LOG;
-  for (int i = n; i < sz; i++)
-    a[i] = 0;
-  for (int i = m; i < sz; ++i)
-    b[i] = 0;
+  fill(a + n, a + sz, 0);
+  fill(b + m, b + sz, 0);
+  FFT(sz, LOG, a), FFT(sz, LOG, b);
+  for (int i = 0; i < sz; i++) a[i] *= b[i];
   FFT(sz, LOG, a);
-  FFT(sz, LOG, b);
-  for (int i = 0; i < sz; i++) {
-    a[i] *= b[i];
-  }
-  FFT(sz, LOG, a);
-  for (int i = 0; i < sz; i++) {
-    fans[i] = (int)(a[i].real() / sz + 0.5);
-  }
+  for (int i = 0; i < sz; i++) fans[i] = (int)(a[i].real() / sz + 0.5);
   reverse(fans + 1, fans + sz);
 }
-}  // namespace FFT
 // DONT FORGET TO INITFFT() AND CHECK MAXLOG
